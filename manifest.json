@@ -1,15 +1,16 @@
 {
-  "name": "나의 MBTI",
-  "short_name": "나의 MBTI",
+  "name": "MBTI",
+  "short_name": "MBTI",
   "start_url": "index.html",
   "display": "standalone",
   "background_color": "#ffffff",
   "theme_color": "#ff69b4",
   "icons": [
     {
-      "src": "https://cdn-icons-png.flaticon.com/512/3076/3076753.png",
+      "src": "icon.png",
       "sizes": "512x512",
-      "type": "image/png"
+      "type": "image/png",
+      "purpose": "any"
     }
   ]
 }
