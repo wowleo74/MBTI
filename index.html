@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>🌟 나의 MBTI 🌟</title>
+    <link rel="manifest" href="manifest.json">
+    <link href="https://fonts.googleapis.com/css2?family=Nanum+Gothic:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- 기본 디자인 업그레이드 (CSS) --- */
+        :root {
+            --primary-color: #ff69b4; /* 메인 핑크 */
+            --secondary-color: #ffb6c1; /* 연한 핑크 */
+            --bg-color: #f0f8ff; /* 연한 하늘색 배경 */
+            --text-color: #333;
+            --accent-color: #add8e6; /* 연한 하늘색 포인트 */
+        }
+
+        body {
+            font-family: 'Nanum Gothic', sans-serif;
+            text-align: center;
+            background-color: var(--bg-color);
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            overflow: hidden; /* 스크롤 방지 */
+        }
+
+        #game-container {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            border-radius: 40px;
+            box-shadow: 0 15px 35px rgba(255, 105, 180, 0.2); /* 핑크빛 그림자 */
+            max-width: 500px;
+            width: 90%;
+            position: relative;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+        }
+
+        .hidden { display: none !important; }
+
+        /* 타이틀 디자인 */
+        h1 {
+            color: var(--primary-color);
+            margin-top: 0;
+            font-size: 28px;
+            font-weight: 700;
+            line-height: 1.3;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.05);
+        }
+
+        h2 {
+            font-size: 22px;
+            line-height: 1.5;
+            color: var(--text-color);
+            font-weight: 700;
+            margin-bottom: 30px;
+        }
+
+        p {
+            color: #666;
+            font-size: 16px;
+            line-height: 1.8;
+            margin-bottom: 30px;
+        }
+
+        /* --- 버튼 디자인 업그레이드 (애니메이션 포함) --- */
+        .btn-container {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: linear-gradient(145deg, var(--secondary-color), var(--primary-color));
+            border: none;
+            padding: 18px 30px;
+            border-radius: 20px;
+            font-size: 18px;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275); /* 부드러운 튀는 효과 */
+            width: 100%;
+            max-width: 200px;
+            box-shadow: 0 6px 12px rgba(255, 105, 180, 0.3);
+            position: relative;
+            overflow: hidden;
+        }
+
+        button:hover {
+            transform: translateY(-5px) scale(1.03);
+            box-shadow: 0 10px 20px rgba(255, 105, 180, 0.4);
+        }
+
+        button:active {
+            transform: translateY(2px) scale(0.98);
+            box-shadow: 0 3px 6px rgba(255, 105, 180, 0.2);
+        }
+        
+        /* 다시 하기 버튼 (색상 변경) */
+        .btn-retry {
+            background: linear-gradient(145deg, var(--accent-color), #87ceeb);
+            box-shadow: 0 6px 12px rgba(173, 216, 230, 0.4);
+        }
+        .btn-retry:hover {
+            box-shadow: 0 10px 20px rgba(173, 216, 230, 0.5);
+        }
+
+        /* --- 진행 바 디자인 업그레이드 --- */
+        #progress-container {
+            width: 100%;
+            background-color: #eee;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            overflow: hidden;
+            height: 12px;
+            box-shadow: inset 0 2px 4px rgba(0,0,0,0.05);
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
+            border-radius: 15px;
+            transition: width 0.4s ease-in-out; /* 부드러운 진행 효과 */
+        }
+
+        #progress-text {
+            font-size: 14px;
+            color: #888;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+        
+        /* --- 결과 화면 디자인 업그레이드 --- */
+        #mbti-result {
+            font-size: 64px;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin: 10px 0 25px 0;
+            text-shadow: 3px 3px 6px rgba(255, 105, 180, 0.3);
+            animation: resultBeat 1s ease-out; /* 결과 등장 시 두근거리는 효과 */
+        }
+
+        @keyframes resultBeat {
+            0% { transform: scale(0.5); opacity: 0; }
+            50% { transform: scale(1.1); opacity: 1; }
+            100% { transform: scale(1); }
+        }
+
+        #mbti-desc {
+            background-color: #fff0f5;
+            padding: 25px;
+            border-radius: 20px;
+            border-left: 6px solid var(--primary-color);
+            text-align: left;
+            box-shadow: inset 0 2px 5px rgba(0,0,0,0.03);
+            position: relative;
+        }
+        
+        #mbti-desc::before {
+            content: '💖';
+            position: absolute;
+            top: -15px;
+            left: 15px;
+            font-size: 24px;
+        }
+
+        /* --- 질문 전환 애니메이션 --- */
+        .fade-in {
+            animation: fadeInEffect 0.5s ease-in-out;
+        }
+
+        @keyframes fadeInEffect {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+    </style>
+</head>
+<body>
+
+<div id="game-container">
+    <div id="start-screen" class="fade-in">
+        <h1>🌟 MBTI 성격 테스트 🌟</h1>
+        <p>나의  MBTI!<br>나는 어떤 매력을 가졌을까?</p>
+        <div class="btn-container">
+            <button onclick="startTest()">시작하기</button>
+        </div>
+    </div>
+
+    <div id="test-screen" class="hidden">
+        <div id="progress-text">1 / 20</div>
+        <div id="progress-container"><div id="progress-bar"></div></div>
+        <div id="question-container" class="fade-in">
+            <h2 id="question">질문이 여기에 나옵니다.</h2>
+            <div class="btn-container">
+                <button onclick="answer('yes')">그렇다</button>
+                <button onclick="answer('no')">아니다</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="result-screen" class="hidden fade-in">
+        <h2>당신의 성격 유형은?</h2>
+        <div id="mbti-result">ENFP</div>
+        <p id="mbti-desc">설명이 여기에 나옵니다.</p>
+        <div class="btn-container" style="margin-top: 40px;">
+            <button onclick="location.reload()" class="btn-retry">다시 하기</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    // --- 데이터 및 로직 (동일하지만 애니메이션 추가를 위해 일부 수정) ---
+    const questions = [
+        // [E vs I] 에너지 방향
+        { q: "쉬는 시간에 친구들과 교실 뒤에서 떠드는 게 제일 재밌다!", type: "EI" },
+        { q: "모르는 친구에게 먼저 다가가서 인사하는 건 식은 죽 먹기다!", type: "EI" },
+        { q: "주말엔 집에만 있으면 좀이 쑤시고 답답해서 나가고 싶다!", type: "EI" },
+        { q: "발표할 때 반 친구들이 나만 쳐다보는 게 은근히 기분 좋다!", type: "EI" },
+        { q: "속상한 일은 혼자 삭히기보다 단톡방에 말해야 풀린다!", type: "EI" },
+
+        // [S vs N] 현실 vs 상상
+        { q: "숙제할 때 '자유롭게 해와'보다 '몇 쪽까지 해와'가 훨씬 편하다!", type: "SN" },
+        { q: "수업 듣다가 딴생각(갑자기 좀비가 나타나면?)을 자주 한다!", type: "NS" },
+        { q: "연예인을 좋아할 때 그 사람의 실제 정보(키, 나이 등)를 더 많이 찾아본다!", type: "SN" },
+        { q: "일기를 쓸 때 오늘 있었던 일을 순서대로 자세히 적는다!", type: "SN" },
+        { q: "새로 나온 앱은 설명서 안 봐도 대충 만져보면 다 안다!", type: "NS" },
+
+        // [T vs F] 머리 vs 마음
+        { q: "친구가 울면 '왜 울어?'라며 이유부터 궁금해진다!", type: "TF" },
+        { q: "숙제 도와달라고 할 때 미안함보다 '이거 어떻게 해?'가 먼저 나온다!", type: "TF" },
+        { q: "혼날 때 서운한 마음보다 '내가 뭘 잘못했지?'부터 생각한다!", type: "TF" },
+        { q: "친구가 나랑 똑같은 옷을 입고 오면 그냥 '취향 같네' 하고 넘긴다!", type: "TF" },
+        { q: "상담해줄 때 위로보다는 '그럴 땐 이렇게 해봐'라고 알려준다!", type: "TF" },
+
+        // [J vs P] 계획 vs 자유
+        { q: "시험 기간엔 과목별로 공부할 양을 미리 다 짜놔야 한다!", type: "JP" },
+        { q: "가방 안이나 내 책상은 나름의 규칙대로 정리되어 있다!", type: "JP" },
+        { q: "친구랑 약속했는데 갑자기 장소가 바뀌면 좀 짜증난다!", type: "JP" },
+        { q: "방학 숙제는 미리미리 해서 마지막 날엔 편하게 놀고 싶다!", type: "JP" },
+        { q: "준비물 챙길 때 빠진 게 없는지 여러 번 확인한다!", type: "JP" }
+    ];
+
+    const mbtiDescriptions = {
+        "ISTJ": "철저한 모범생형! 책임감이 강해서 숙제도 꼬박꼬박 잘하고 믿음직한 딸이에요.",
+        "ISFJ": "다정한 평화주의자! 주변 친구들을 잘 챙기고 배려심이 깊은 천사표 딸!",
+        "INFJ": "생각이 깊은 예언자! 조용하지만 자기만의 신념이 뚜렷하고 마음이 따뜻해요.",
+        "INTJ": "똑똑한 전략가! 혼자서도 척척 잘해내고 목표를 세우면 끝까지 해내는 똑순이!",
+        "ISTP": "만능 재주꾼! 손재주가 좋거나 도구 쓰는 걸 잘하며 쿨하고 털털한 매력의 소유자.",
+        "ISFP": "예술가 영혼! 마음이 순하고 싸우는 걸 싫어하며 자기만의 색깔이 뚜렷해요.",
+        "INFP": "꿈꾸는 소녀! 감수성이 풍부하고 상상력이 좋아 가끔 엉뚱하지만 사랑스러워요.",
+        "INTP": "방구석 천재! 궁금한 게 많고 논리적이라 아빠랑 토론해도 안 밀릴걸요?",
+        "ESTP": "활동적인 모험가! 운동이나 활동적인 걸 좋아하고 적응력이 짱인 분위기 메이커.",
+        "ESFP": "슈퍼스타 낙천가! 노는 게 제일 좋고 어디서나 인기가 많은 우리 집 비타민!",
+        "ENFP": "재기발랄 활동가! 호기심 대장이고 에너지가 넘쳐서 주변 사람들을 즐겁게 해요.",
+        "ENTP": "똑똑한 장난꾸러기! 아이디어가 뱅크고 아빠한테 말대답(?)도 논리적으로 잘하죠?",
+        "ESTJ": "카리스마 리더! 계획대로 딱딱 움직이고 친구들 사이에서도 대장 역할을 잘해요.",
+        "ESFJ": "우리 반 인싸 반장! 친구들 소식에 빠르고 남을 돕는 걸 행복해하는 다정다감형.",
+        "ENFJ": "정의로운 리더! 사람들을 이끄는 힘이 있고 응원과 격려를 아끼지 않는 멋진 딸.",
+        "ENTJ": "용감한 지휘관! 결단력이 있고 자기가 하고 싶은 건 꼭 해내고 마는 추진력 대장."
+    };
+
+    let currentIdx = 0;
+    let scores = { E: 0, I: 0, S: 0, N: 0, T: 0, F: 0, J: 0, P: 0 };
+
+    function startTest() {
+        // 메인 화면 페이드 아웃 후 테스트 화면 표시
+        fadeOutEffect('start-screen', () => {
+            document.getElementById('test-screen').classList.remove('hidden');
+            showQuestion();
+        });
+    }
+
+    function showQuestion() {
+        const progress = (currentIdx + 1) / questions.length * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+        document.getElementById('progress-text').innerText = (currentIdx + 1) + " / " + questions.length;
+        
+        // 질문 교체 시 페이드 인 효과 적용
+        const qContainer = document.getElementById('question-container');
+        qContainer.classList.remove('fade-in'); 
+        void qContainer.offsetWidth; // 애니메이션 초기화 트리거
+        qContainer.classList.add('fade-in');
+        
+        document.getElementById('question').innerText = questions[currentIdx].q;
+    }
+
+    function answer(val) {
+        const type = questions[currentIdx].type;
+        let pos, neg;
+        if (type === "NS") { pos = "N"; neg = "S"; }
+        else if (type === "FT") { pos = "F"; neg = "T"; }
+        else { pos = type[0]; neg = type[1]; }
+
+        if (val === 'yes') scores[pos]++;
+        else scores[neg]++;
+
+        currentIdx++;
+        if (currentIdx < questions.length) {
+            showQuestion();
+        } else {
+            // 모든 질문 끝났을 때 페이드 아웃 후 결과 표시
+            fadeOutEffect('test-screen', showResult);
+        }
+    }
+
+    function showResult() {
+        document.getElementById('result-screen').classList.remove('hidden');
+
+        let result = "";
+        result += (scores.E >= scores.I) ? "E" : "I";
+        result += (scores.S >= scores.N) ? "S" : "N";
+        result += (scores.T >= scores.F) ? "T" : "F";
+        result += (scores.J >= scores.P) ? "J" : "P";
+
+        document.getElementById('mbti-result').innerText = result;
+        document.getElementById('mbti-desc').innerText = mbtiDescriptions[result] || "당신은 아주 멋진 사람입니다!";
+    }
+    
+    // --- 화면 전환을 위한 간단한 페이드 아웃 함수 ---
+    function fadeOutEffect(elementId, callback) {
+        const element = document.getElementById(elementId);
+        element.style.transition = 'opacity 0.4s ease, transform 0.4s ease';
+        element.style.opacity = '0';
+        element.style.transform = 'translateY(-10px)';
+        
+        setTimeout(() => {
+            element.classList.add('hidden');
+            element.style.opacity = '1'; // 다음 사용을 위해 초기화
+            element.style.transform = 'translateY(0)';
+            if (callback) callback();
+        }, 400); // 애니메이션 시간과 맞춤
+    }
+</script>
+
+</body>
+</html>
